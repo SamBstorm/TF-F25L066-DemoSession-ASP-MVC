@@ -8,10 +8,14 @@ namespace DemoUser.ASP.Controllers
     public class AuthController : Controller
     {
         private IUserRepository<BLL.Entities.User> _service;
+        private ILogger<AuthController> _logger;
 
-        public AuthController(IUserRepository<BLL.Entities.User> service)
+        public AuthController(
+            IUserRepository<BLL.Entities.User> service,
+            ILogger<AuthController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -24,9 +28,19 @@ namespace DemoUser.ASP.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(FormCollection form)
+        public IActionResult Login(UserLoginForm form)
         {
-            return View();
+            try
+            {
+                if (!ModelState.IsValid) throw new InvalidOperationException("Identification invalide...");
+                Guid id = _service.CheckPassword(form.Email, form.Password);
+                _logger.LogInformation($"Connection successfull : {id}");
+                return RedirectToAction(nameof(Index), "Home");
+            }
+            catch (Exception)
+            {
+                return View();
+            }
         }
 
         public IActionResult Logout()
