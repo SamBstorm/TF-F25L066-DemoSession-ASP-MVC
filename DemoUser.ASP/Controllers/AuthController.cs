@@ -1,4 +1,6 @@
-﻿using DemoUser.Domain.Repositories;
+﻿using DemoUser.ASP.Mapper;
+using DemoUser.ASP.Models;
+using DemoUser.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoUser.ASP.Controllers
@@ -14,7 +16,7 @@ namespace DemoUser.ASP.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction(nameof(Login));
         }
 
         public IActionResult Login()
@@ -42,9 +44,23 @@ namespace DemoUser.ASP.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Register(FormCollection form)
+        public IActionResult Register(UserRegisterForm form)
         {
-            return View();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    throw new InvalidOperationException("Le formulaire n'est pas correctement rempli.");
+                }
+                Guid id = _service.Insert(form.ToBLL());
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+
+                return View();
+                
+            }
         }
     }
 }
