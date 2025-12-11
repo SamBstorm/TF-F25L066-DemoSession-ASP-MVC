@@ -1,3 +1,4 @@
+using DemoUser.ASP.Handlers.Sessions;
 using DemoUser.ASP.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -7,10 +8,12 @@ namespace DemoUser.ASP.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private SessionManager _session;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, SessionManager session)
         {
             _logger = logger;
+            _session = session;
         }
 
         public IActionResult Index()

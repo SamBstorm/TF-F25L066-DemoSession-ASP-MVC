@@ -1,4 +1,5 @@
-﻿using DemoUser.ASP.Mapper;
+﻿using DemoUser.ASP.Handlers;
+using DemoUser.ASP.Handlers.Sessions;
 using DemoUser.ASP.Models;
 using DemoUser.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -9,13 +10,16 @@ namespace DemoUser.ASP.Controllers
     {
         private IUserRepository<BLL.Entities.User> _service;
         private ILogger<AuthController> _logger;
+        private SessionManager _session;
 
         public AuthController(
             IUserRepository<BLL.Entities.User> service,
+            SessionManager session,
             ILogger<AuthController> logger)
         {
             _service = service;
             _logger = logger;
+            _session = session;
         }
 
         public IActionResult Index()
@@ -34,6 +38,7 @@ namespace DemoUser.ASP.Controllers
             {
                 if (!ModelState.IsValid) throw new InvalidOperationException("Identification invalide...");
                 Guid id = _service.CheckPassword(form.Email, form.Password);
+                _session.User = new UserSession(id, form.Email);
                 _logger.LogInformation($"Connection successfull : {id}");
                 return RedirectToAction(nameof(Index), "Home");
             }
@@ -48,9 +53,10 @@ namespace DemoUser.ASP.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Logout(FormCollection form)
+        public IActionResult Logout(IFormCollection form)
         {
-            return View();
+            _session.CleanUserSession();
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Register()

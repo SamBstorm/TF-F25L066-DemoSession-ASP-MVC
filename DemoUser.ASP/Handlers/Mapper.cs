@@ -1,6 +1,6 @@
 ﻿using DemoUser.ASP.Models;
 
-namespace DemoUser.ASP.Mapper
+namespace DemoUser.ASP.Handlers
 {
     public static class Mapper
     {

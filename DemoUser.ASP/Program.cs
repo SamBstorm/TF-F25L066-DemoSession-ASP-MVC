@@ -1,3 +1,4 @@
+using DemoUser.ASP.Handlers.Sessions;
 using DemoUser.Domain.Repositories;
 using Microsoft.Data.SqlClient;
 using System.Data.Common;
@@ -18,7 +19,11 @@ namespace DemoUser.ASP
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            //Ajout du service d'accès à l'HttpContext (seulement disponible dans le Controlleur et les Vues si non-implémenté)
+            builder.Services.AddHttpContextAccessor();
+
             //Services de sessions
+            builder.Services.AddScoped<SessionManager>();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options => {
                 options.Cookie.Name = "DemoSession";
