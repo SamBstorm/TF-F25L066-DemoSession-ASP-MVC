@@ -24,7 +24,13 @@ namespace DemoUser.ASP
 
             //Services de sessions
             builder.Services.AddScoped<SessionManager>();
-            builder.Services.AddDistributedMemoryCache();
+            //builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = configuration.GetConnectionString("DemoUser.Session");
+                options.SchemaName = "dbo";
+                options.TableName = "SessionCache";
+            });
             builder.Services.AddSession(options => {
                 options.Cookie.Name = "DemoSession";
                 options.Cookie.HttpOnly = true;

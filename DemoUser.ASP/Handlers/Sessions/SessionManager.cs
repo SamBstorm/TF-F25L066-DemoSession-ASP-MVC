@@ -34,7 +34,7 @@ namespace DemoUser.ASP.Handlers.Sessions
 
         public void CleanUserSession()
         {
-            User = null;
+            _session.Clear();
         }
     }
 }
