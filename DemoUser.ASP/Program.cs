@@ -18,6 +18,23 @@ namespace DemoUser.ASP
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            //Services de sessions
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options => {
+                options.Cookie.Name = "DemoSession";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(3);
+            });
+            //Service de contrôle du consentement d'utilisation des cookies essentiels
+            builder.Services.Configure<CookiePolicyOptions>(
+                options =>
+                {
+                    options.CheckConsentNeeded = context => true;
+                    options.MinimumSameSitePolicy = SameSiteMode.None;
+                    options.Secure = CookieSecurePolicy.Always;
+                });
+
 
             //Services d'intégration des couches BLL et DAL
             builder.Services.AddScoped<DbConnection>(serviceProvider => new SqlConnection(
@@ -37,6 +54,11 @@ namespace DemoUser.ASP
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            //Activation des services de sessions lors des échanges HTTP
+            app.UseSession();
+            //Activation du contrôle de règlementation du cookie
+            app.UseCookiePolicy();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
