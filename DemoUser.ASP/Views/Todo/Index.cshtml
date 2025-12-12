@@ -1,0 +1,18 @@
+﻿@model IEnumerable<string>
+
+<h1>Liste des tâches</h1>
+
+@if(Model.Count() <= 0)
+{
+    <p>Aucune tâche actuellement...<br /><a asp-action="Create">En créer une ?</a></p>
+}
+else
+{
+    <a asp-action="Create" class="btn btn-outline-primary">Ajouter une tâche</a>
+    <ul>
+        @foreach(string task in Model)
+        {
+            <li>@task</li>
+        }
+    </ul>
+}

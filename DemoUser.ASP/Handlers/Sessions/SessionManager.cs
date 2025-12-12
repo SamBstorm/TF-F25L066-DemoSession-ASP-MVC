@@ -11,6 +11,29 @@ namespace DemoUser.ASP.Handlers.Sessions
             _session = accessor.HttpContext!.Session;
         }
 
+        public IEnumerable<string> TodoList
+        {
+            get {
+                string? json = _session.GetString(nameof(TodoList));
+                //return JsonSerializer.Deserialize<string[]>(json ?? "[]");
+                return json is null ? new string[0] : JsonSerializer.Deserialize<string[]>(json)!;
+            }
+            private set {
+                if (value is null) throw new ArgumentNullException(nameof(TodoList));
+                string json = JsonSerializer.Serialize(value);
+                _session.SetString(nameof(TodoList), json);
+            }
+        }
+
+        public void AjouterTodo(string todo)
+        {
+            List<string> todoList = new List<string>(TodoList);
+            todoList.Add(todo);
+            TodoList = todoList;
+            //OU
+            //TodoList = [.. TodoList, todo];
+        }
+
         public UserSession? User
         {
             get {
