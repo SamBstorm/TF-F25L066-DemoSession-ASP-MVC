@@ -74,9 +74,29 @@ namespace DemoUser.ASP
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?statusCode={0}");
+
             app.UseRouting();
 
             app.UseAuthorization();
+
+            /*app.MapControllerRoute(
+                name : "AuthLoginRedirection",
+                pattern : "/Login",
+                defaults: new { controller = "Auth", action = "Login"}
+                );
+
+            app.MapControllerRoute(
+                name: "AuthLogoutRedirection",
+                pattern: "/Logout",
+                defaults: new { controller = "Auth", action = "Logout" }
+                );
+
+            app.MapControllerRoute(
+                name: "AuthRegisterRedirection",
+                pattern: "/Register",
+                defaults: new { controller = "Auth", action = "Register" }
+                );*/
 
             app.MapControllerRoute(
                 name: "default",

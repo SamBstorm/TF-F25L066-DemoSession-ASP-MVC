@@ -1,8 +1,10 @@
-﻿using DemoUser.ASP.Handlers.Sessions;
+﻿using DemoUser.ASP.Handlers.Filters;
+using DemoUser.ASP.Handlers.Sessions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoUser.ASP.Controllers
 {
+    [TypeFilter<RequiredAuthenticationFilter>]
     public class TodoController : Controller
     {
         private readonly SessionManager _session;

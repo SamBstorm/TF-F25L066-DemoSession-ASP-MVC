@@ -1,4 +1,5 @@
 ﻿using DemoUser.ASP.Handlers;
+using DemoUser.ASP.Handlers.Filters;
 using DemoUser.ASP.Handlers.Sessions;
 using DemoUser.ASP.Models;
 using DemoUser.Domain.Repositories;
@@ -27,11 +28,15 @@ namespace DemoUser.ASP.Controllers
             return RedirectToAction(nameof(Login));
         }
 
+        [Route("/Login")]
+        [TypeFilter<AnonymousFilter>]
         public IActionResult Login()
         {
             return View();
         }
+        [Route("/Login")]
         [HttpPost]
+        [TypeFilter<AnonymousFilter>]
         public IActionResult Login(UserLoginForm form)
         {
             try
@@ -47,23 +52,29 @@ namespace DemoUser.ASP.Controllers
                 return View();
             }
         }
-
+        [Route("/Logout")]
+        [TypeFilter<RequiredAuthenticationFilter>]
         public IActionResult Logout()
         {
             return View();
         }
         [HttpPost]
+        [Route("/Logout")]
+        [TypeFilter<RequiredAuthenticationFilter>]
         public IActionResult Logout(IFormCollection form)
         {
             _session.CleanUserSession();
             return RedirectToAction(nameof(Index));
         }
-
+        [Route("/Register")]
+        [TypeFilter<AnonymousFilter>]
         public IActionResult Register()
         {
             return View();
         }
         [HttpPost]
+        [Route("/Register")]
+        [TypeFilter<AnonymousFilter>]
         public IActionResult Register(UserRegisterForm form)
         {
             try
